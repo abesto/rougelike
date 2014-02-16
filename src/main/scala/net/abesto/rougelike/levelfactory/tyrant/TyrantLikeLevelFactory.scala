@@ -25,9 +25,9 @@ object TyrantLikeLevelFactory {
 
   def withEntrance(gen: Tile => Feature, level: Level): Option[Feature] =
     Stream.continually{level.tiles(Random.nextInt(level.w))(Random.nextInt(level.h))}
-      .take(10)
-      .find{t => gen(t).fits}
+      .take(7)
       .map{t => gen(t)}
+      .find{_.fits}
 
   def create(w: Int, h: Int) = {
     logger.info("creating_level {} {}", w, h)
@@ -36,11 +36,15 @@ object TyrantLikeLevelFactory {
       level.tiles(x)(y) = new WallTile(level, x, y)
     }
 
-    for (x <- 30 until 50; y <- 20 until 30) {
+    val width = Random.nextInt(20) + 10
+    val height = Random.nextInt(10) + 5
+    val left = Random.nextInt(w - width - 1)
+    val top = Random.nextInt(h - height - 1)
+    for (x <- left until left + width; y <- top until top + height) {
       level.tiles(x)(y) = new FloorTile(level, x, y)
     }
 
-    for (i <- 1 until 1000) {
+    for (i <- 1 until Math.sqrt(w.toDouble * h).toInt * 10) {
       withEntrance(FeatureGenerator.next, level).foreach{_.applyToLevel(level)}
     }
 

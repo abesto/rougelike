@@ -9,5 +9,5 @@ case class StraightCorridor(length: Int)(start: Tile) extends Feature(start) {
 
   override def toString = s"StraightCorridor($length,$start,${Try(direction).getOrElse("N/A")})"
 
-  override val supportedDirections: Set[Direction.Direction] = Direction.values
+  override val supportedDirections: Set[Direction.Direction] = Set(North, East, West, South)
 }
